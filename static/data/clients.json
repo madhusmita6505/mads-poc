@@ -1,0 +1,419 @@
+[
+  {
+    "id": "CH-20198",
+    "name": "Robert & Margaret Chen",
+    "primary_contact": "Robert Chen",
+    "email": "r.chen@email.com",
+    "phone": "(212) 555-0147",
+    "relationship_start": "2017-03-15",
+    "fa_name": "David Morrison",
+    "client_tier": "HNW ($1M-$10M)",
+    "total_aum": 4280000,
+    "accounts": [
+      {
+        "name": "Select UMA — Growth",
+        "type": "Advisory",
+        "value": 2150000,
+        "program": "Select UMA",
+        "holdings_summary": "60% US Equity (Large-Cap Growth SMA), 20% International (MSCI EAFE ETF), 10% Fixed Income (Muni Bond SMA), 10% Alternatives",
+        "total_tax_365": true,
+        "ytd_return": 8.2
+      },
+      {
+        "name": "Joint Brokerage",
+        "type": "Brokerage",
+        "value": 980000,
+        "program": "Active Assets",
+        "holdings_summary": "AAPL (32%), MSFT (18%), GOOGL (12%), AMZN (8%), Municipal Bond Ladder (30%)",
+        "total_tax_365": false,
+        "ytd_return": 11.4,
+        "flags": ["Concentration risk: AAPL at 32%"]
+      },
+      {
+        "name": "Robert — Traditional IRA",
+        "type": "Retirement",
+        "value": 620000,
+        "program": "Consulting Group Advisor",
+        "holdings_summary": "Target-Date 2035 Fund (70%), Bond Index (30%)",
+        "total_tax_365": false,
+        "ytd_return": 5.8
+      },
+      {
+        "name": "Margaret — Roth IRA",
+        "type": "Retirement",
+        "value": 285000,
+        "program": "Consulting Group Advisor",
+        "holdings_summary": "S&P 500 Index (50%), Small-Cap Growth (30%), International (20%)",
+        "total_tax_365": false,
+        "ytd_return": 9.1
+      },
+      {
+        "name": "529 Education — Kevin",
+        "type": "Education",
+        "value": 145000,
+        "program": "529 Plan",
+        "holdings_summary": "Age-Based Aggressive Portfolio (Kevin starts college 2027)",
+        "total_tax_365": false,
+        "ytd_return": 7.6
+      },
+      {
+        "name": "529 Education — Lisa",
+        "type": "Education",
+        "value": 100000,
+        "program": "529 Plan",
+        "holdings_summary": "Age-Based Moderate Portfolio (Lisa starts college 2030)",
+        "total_tax_365": false,
+        "ytd_return": 6.9
+      }
+    ],
+    "gps_goals": [
+      { "name": "Retirement at 62", "target": 6000000, "current_progress": 72, "on_track": true, "timeline": "2034" },
+      { "name": "Kevin's College Fund", "target": 250000, "current_progress": 58, "on_track": false, "timeline": "2027" },
+      { "name": "Lisa's College Fund", "target": 250000, "current_progress": 40, "on_track": true, "timeline": "2030" },
+      { "name": "Europe Vacation Fund", "target": 30000, "current_progress": 45, "on_track": true, "timeline": "2026" }
+    ],
+    "risk_profile": "moderate_aggressive",
+    "personal": {
+      "family": ["Wife: Margaret (age 49, nurse practitioner)", "Son: Kevin (age 16, high school junior)", "Daughter: Lisa (age 13, 8th grade)", "Mother: Grace (age 78, lives nearby)"],
+      "interests": ["Travel (wants Italy & France trip)", "Tennis league on weekends", "Wine collecting"],
+      "career": "VP of Engineering at tech company, considering early retirement at 58-60",
+      "life_events": ["Kevin applying to colleges this fall", "Considering downsizing home in 5 years", "Mother Grace may need assisted living soon"]
+    },
+    "past_conversations": [
+      {
+        "date": "2025-11-15",
+        "summary": "Discussed Kevin's college timeline and 529 shortfall. Robert concerned about tech stock concentration in brokerage account. Agreed to explore Parametric Direct Indexing for tax-efficient diversification. Margaret asked about long-term care insurance for Grace.",
+        "action_items": ["Send Parametric Direct Indexing proposal", "Research LTC insurance options for Grace", "Model 529 catch-up contributions in GPS"]
+      },
+      {
+        "date": "2025-08-22",
+        "summary": "Quarterly GPS review. Retirement goal on track. Discussed Total Tax 365 benefits — enrolled Select UMA. Robert mentioned possible early retirement. Reviewed risk tolerance — confirmed moderate-aggressive still appropriate.",
+        "action_items": ["Enroll Select UMA in Total Tax 365", "Run Aladdin early retirement scenario", "Update GPS with early retirement option"]
+      },
+      {
+        "date": "2025-05-10",
+        "summary": "Annual comprehensive review. Consolidated two old SMAs into Select UMA. Discussed Europe vacation savings. Margaret interested in ESG investing for Roth IRA. Set up auto-contributions to 529s.",
+        "action_items": ["Complete UMA consolidation paperwork", "Send ESG fund options for Margaret's Roth", "Set up monthly 529 contributions"]
+      }
+    ],
+    "compliance_notes": "Form CRS delivered 2017-03. Last suitability review 2025-08. No outstanding compliance items.",
+    "next_review_due": "2026-02-28"
+  },
+  {
+    "id": "MZ-31045",
+    "name": "Sarah Martinez",
+    "primary_contact": "Sarah Martinez",
+    "email": "s.martinez@email.com",
+    "phone": "(415) 555-0293",
+    "relationship_start": "2019-06-01",
+    "fa_name": "David Morrison",
+    "client_tier": "UHNW ($10M+)",
+    "total_aum": 12450000,
+    "accounts": [
+      {
+        "name": "Select UMA — Balanced Growth",
+        "type": "Advisory",
+        "value": 5200000,
+        "program": "Select UMA",
+        "holdings_summary": "Parametric Direct Indexing (40%), International SMA (25%), Municipal Bond SMA (20%), Alternatives Sleeve (15%)",
+        "total_tax_365": true,
+        "ytd_return": 7.8
+      },
+      {
+        "name": "Alternative Investments",
+        "type": "Advisory",
+        "value": 2800000,
+        "program": "Alternative Investments",
+        "holdings_summary": "PE Fund III (35%), Private Credit Fund (25%), Real Assets Fund (20%), Hedge Fund (20%)",
+        "total_tax_365": false,
+        "ytd_return": 9.4
+      },
+      {
+        "name": "Charitable Remainder Trust",
+        "type": "Trust",
+        "value": 1500000,
+        "program": "Trust Services",
+        "holdings_summary": "Diversified Bond Portfolio (60%), Dividend Equity (40%)",
+        "total_tax_365": false,
+        "ytd_return": 5.2
+      },
+      {
+        "name": "Individual Brokerage",
+        "type": "Brokerage",
+        "value": 1650000,
+        "program": "Active Assets",
+        "holdings_summary": "Company stock — TechCo Inc (85%), Cash (15%)",
+        "total_tax_365": false,
+        "ytd_return": 22.1,
+        "flags": ["CRITICAL: 85% single-stock concentration in employer stock", "Potential 10b5-1 plan needed"]
+      },
+      {
+        "name": "Traditional IRA",
+        "type": "Retirement",
+        "value": 850000,
+        "program": "Consulting Group Advisor",
+        "holdings_summary": "Balanced Fund (60%), Bond Index (40%)",
+        "total_tax_365": false,
+        "ytd_return": 6.3
+      },
+      {
+        "name": "Securities-Based Line of Credit",
+        "type": "Lending",
+        "value": 450000,
+        "program": "Morgan Stanley Lending",
+        "holdings_summary": "Credit line secured against Select UMA. Current utilization: 28%",
+        "total_tax_365": false,
+        "ytd_return": null
+      }
+    ],
+    "gps_goals": [
+      { "name": "Early Retirement at 50", "target": 15000000, "current_progress": 83, "on_track": true, "timeline": "2028" },
+      { "name": "Philanthropic Foundation", "target": 3000000, "current_progress": 50, "on_track": true, "timeline": "2029" },
+      { "name": "Real Estate Purchase (Napa)", "target": 2000000, "current_progress": 65, "on_track": true, "timeline": "2027" }
+    ],
+    "risk_profile": "aggressive",
+    "personal": {
+      "family": ["Partner: James (age 44, architect)", "No children", "Sister: Ana (age 40, physician in Miami)"],
+      "interests": ["Wine country (wants Napa property)", "Art collecting — contemporary", "Marathon runner", "Board member of local STEM nonprofit"],
+      "career": "Founder & CEO of TechCo Inc, exploring sale/liquidity event in 18-24 months",
+      "life_events": ["Company acquisition talks with two suitors", "Planning Napa vineyard property purchase", "Establishing family foundation for STEM education"]
+    },
+    "past_conversations": [
+      {
+        "date": "2025-12-03",
+        "summary": "Discussed liquidity event planning for potential TechCo acquisition. Reviewed 10b5-1 plan options for systematic diversification. Sarah wants to accelerate foundation funding post-sale. Explored Donor-Advised Fund as interim vehicle. Discussed impact of capital gains on concentrated position.",
+        "action_items": ["Prepare 10b5-1 diversification plan analysis", "Model tax impact of various sale scenarios in GPS", "Research DAF providers and MS Philanthropy services", "Schedule call with MS Tax specialist"]
+      },
+      {
+        "date": "2025-09-18",
+        "summary": "Quarterly review. SBL utilization reviewed — using for Napa property deposit. Alternative investments performing well. Discussed rebalancing Parametric sleeve for year-end tax harvesting. Sarah asked about adding digital assets allocation.",
+        "action_items": ["Run Total Tax 365 year-end harvesting analysis", "Send digital assets research report", "Review SBL terms for potential increase"]
+      }
+    ],
+    "compliance_notes": "Accredited investor verified 2025-01. Form CRS delivered 2019-06. Complex client — enhanced suitability review required for alternatives.",
+    "next_review_due": "2026-03-15"
+  },
+  {
+    "id": "TH-44721",
+    "name": "James & Emily Thompson",
+    "primary_contact": "James Thompson",
+    "email": "j.thompson@email.com",
+    "phone": "(646) 555-0381",
+    "relationship_start": "2023-01-10",
+    "fa_name": "David Morrison",
+    "client_tier": "Affluent ($250K-$1M)",
+    "total_aum": 685000,
+    "accounts": [
+      {
+        "name": "Joint Advisory Account",
+        "type": "Advisory",
+        "value": 320000,
+        "program": "Consulting Group Advisor",
+        "holdings_summary": "Balanced Growth Model (60% Equity / 40% Fixed Income)",
+        "total_tax_365": false,
+        "ytd_return": 6.8
+      },
+      {
+        "name": "James — 401(k) Rollover IRA",
+        "type": "Retirement",
+        "value": 185000,
+        "program": "Consulting Group Advisor",
+        "holdings_summary": "Target-Date 2055 Fund (80%), Bond Index (20%)",
+        "total_tax_365": false,
+        "ytd_return": 8.4
+      },
+      {
+        "name": "Emily — Roth IRA",
+        "type": "Retirement",
+        "value": 95000,
+        "program": "Self-Directed",
+        "holdings_summary": "S&P 500 ETF (70%), Growth ETF (30%)",
+        "total_tax_365": false,
+        "ytd_return": 10.2
+      },
+      {
+        "name": "CashPlus Account",
+        "type": "Cash Management",
+        "value": 85000,
+        "program": "CashPlus",
+        "holdings_summary": "Cash and money market — emergency fund + home down payment savings",
+        "total_tax_365": false,
+        "ytd_return": 4.8
+      }
+    ],
+    "gps_goals": [
+      { "name": "First Home Purchase", "target": 150000, "current_progress": 57, "on_track": true, "timeline": "2027" },
+      { "name": "Retirement at 65", "target": 3000000, "current_progress": 12, "on_track": true, "timeline": "2055" },
+      { "name": "Baby Sophia Education Fund", "target": 200000, "current_progress": 0, "on_track": false, "timeline": "2044" },
+      { "name": "Emergency Fund (6 months)", "target": 60000, "current_progress": 100, "on_track": true, "timeline": "Complete" }
+    ],
+    "risk_profile": "moderate_aggressive",
+    "personal": {
+      "family": ["Wife: Emily (age 30, marketing manager)", "Daughter: Sophia (age 6 months)", "Parents: both retired in Connecticut"],
+      "interests": ["DIY home renovation", "Weekend hiking with family", "Fantasy football league"],
+      "career": "Software engineer at fintech startup, recently promoted to senior engineer. Emily considering part-time after maternity leave.",
+      "life_events": ["Baby Sophia born August 2025", "Emily returning from maternity leave March 2026", "Looking at homes in Westchester County", "James may get equity vest from startup in 2027"]
+    },
+    "past_conversations": [
+      {
+        "date": "2025-10-20",
+        "summary": "New baby planning session. Discussed need for 529 Plan for Sophia. Reviewed life insurance needs — James has only employer coverage. Discussed increasing disability insurance. Emily wants to understand their options if she goes part-time.",
+        "action_items": ["Open 529 Plan for Sophia", "Send term life insurance quotes (20-year, $1M)", "Model Emily part-time income scenario in GPS", "Review disability insurance options"]
+      },
+      {
+        "date": "2025-07-15",
+        "summary": "Mid-year review. CashPlus emergency fund target met. Discussed home purchase timeline — targeting late 2027. James asked about startup equity treatment. Rolled over Emily's old 401(k) to IRA.",
+        "action_items": ["Complete 401(k) rollover paperwork", "Research startup equity tax implications", "Update GPS with home purchase goal"]
+      }
+    ],
+    "compliance_notes": "Form CRS delivered 2023-01. New client — relationship building phase. Standard suitability confirmed.",
+    "next_review_due": "2026-04-10"
+  },
+  {
+    "id": "WL-27893",
+    "name": "Dr. Patricia Williams",
+    "primary_contact": "Patricia Williams",
+    "email": "p.williams@email.com",
+    "phone": "(203) 555-0519",
+    "relationship_start": "2015-09-20",
+    "fa_name": "David Morrison",
+    "client_tier": "HNW ($1M-$10M)",
+    "total_aum": 2840000,
+    "accounts": [
+      {
+        "name": "Select UMA — Conservative Growth",
+        "type": "Advisory",
+        "value": 1200000,
+        "program": "Select UMA",
+        "holdings_summary": "Municipal Bond SMA (35%), Dividend Equity SMA (30%), Parametric Direct Indexing (20%), TIPS (15%)",
+        "total_tax_365": true,
+        "ytd_return": 5.4
+      },
+      {
+        "name": "Traditional IRA",
+        "type": "Retirement",
+        "value": 890000,
+        "program": "Consulting Group Advisor",
+        "holdings_summary": "Balanced Income Fund (50%), Government Bond Fund (30%), Dividend Fund (20%)",
+        "total_tax_365": false,
+        "ytd_return": 4.8
+      },
+      {
+        "name": "Roth IRA",
+        "type": "Retirement",
+        "value": 380000,
+        "program": "Self-Directed",
+        "holdings_summary": "Growth Index ETF (60%), International ETF (40%)",
+        "total_tax_365": false,
+        "ytd_return": 9.6
+      },
+      {
+        "name": "Individual Brokerage",
+        "type": "Brokerage",
+        "value": 370000,
+        "program": "Active Assets",
+        "holdings_summary": "Municipal Bonds (60%), Blue-Chip Dividends (40%)",
+        "total_tax_365": false,
+        "ytd_return": 4.1
+      }
+    ],
+    "gps_goals": [
+      { "name": "Retire from Practice at 63", "target": 3500000, "current_progress": 81, "on_track": true, "timeline": "2028" },
+      { "name": "Part-Time Consulting Income", "target": 100000, "current_progress": 0, "on_track": true, "timeline": "2028-2033" },
+      { "name": "Grandson's Education Fund", "target": 100000, "current_progress": 0, "on_track": false, "timeline": "2040" },
+      { "name": "Beach House Down Payment", "target": 200000, "current_progress": 75, "on_track": true, "timeline": "2027" }
+    ],
+    "risk_profile": "moderate_conservative",
+    "personal": {
+      "family": ["Late husband: William (passed 2022)", "Son: Marcus (age 35, attorney in DC)", "Daughter-in-law: Rachel", "Grandson: Elijah (age 2)"],
+      "interests": ["Gardening and botanical societies", "Book club — historical fiction", "Volunteering at community health clinic", "Plans to travel to Japan and New Zealand"],
+      "career": "Cardiologist, private practice. Planning to transition to part-time consulting by 2028.",
+      "life_events": ["Planning retirement transition 2027-2028", "Wants beach house in Cape Cod area", "Grandson Elijah's christening last month", "Considering selling practice to hospital group"]
+    },
+    "past_conversations": [
+      {
+        "date": "2025-11-08",
+        "summary": "Discussed Roth conversion strategy — current year is ideal due to lower income from reduced practice hours. Reviewed bucket strategy for retirement income. Patricia wants to understand Social Security optimization. Discussed opening 529 for grandson Elijah.",
+        "action_items": ["Model Roth conversion scenarios for 2026 tax year", "Prepare bucket strategy proposal with 3-year cash reserve", "Schedule Social Security optimization analysis", "Send 529 Plan setup documents for Elijah"]
+      },
+      {
+        "date": "2025-08-14",
+        "summary": "Quarterly review. Select UMA performing within expectations. Municipal bond allocation providing tax-efficient income. Discussed practice sale timeline and valuation. Patricia asked about charitable giving strategies for tax offset on practice sale.",
+        "action_items": ["Research practice valuation services", "Model charitable giving scenarios with CRT", "Review Total Tax 365 harvesting opportunities", "Update GPS with practice sale proceeds estimate"]
+      }
+    ],
+    "compliance_notes": "Form CRS delivered 2015-09. Beneficiary designations updated 2022 after William's passing. Suitability last reviewed 2025-08.",
+    "next_review_due": "2026-02-20"
+  },
+  {
+    "id": "RD-55102",
+    "name": "Michael & Lisa Rodriguez",
+    "primary_contact": "Michael Rodriguez",
+    "email": "m.rodriguez@email.com",
+    "phone": "(718) 555-0642",
+    "relationship_start": "2024-05-15",
+    "fa_name": "David Morrison",
+    "client_tier": "Mass Affluent (under $250K)",
+    "total_aum": 182000,
+    "accounts": [
+      {
+        "name": "Joint Brokerage",
+        "type": "Brokerage",
+        "value": 45000,
+        "program": "Active Assets",
+        "holdings_summary": "S&P 500 ETF (50%), Total Bond Market ETF (30%), International ETF (20%)",
+        "total_tax_365": false,
+        "ytd_return": 7.9
+      },
+      {
+        "name": "Michael — Roth IRA",
+        "type": "Retirement",
+        "value": 28000,
+        "program": "Self-Directed",
+        "holdings_summary": "Target-Date 2060 Fund (100%)",
+        "total_tax_365": false,
+        "ytd_return": 9.8
+      },
+      {
+        "name": "Lisa — Roth IRA",
+        "type": "Retirement",
+        "value": 24000,
+        "program": "Self-Directed",
+        "holdings_summary": "Growth ETF (60%), S&P 500 ETF (40%)",
+        "total_tax_365": false,
+        "ytd_return": 10.5
+      },
+      {
+        "name": "CashPlus Account",
+        "type": "Cash Management",
+        "value": 85000,
+        "program": "CashPlus",
+        "holdings_summary": "Emergency fund ($35K) + House savings ($50K)",
+        "total_tax_365": false,
+        "ytd_return": 4.8
+      }
+    ],
+    "gps_goals": [
+      { "name": "Emergency Fund (6 months)", "target": 42000, "current_progress": 83, "on_track": true, "timeline": "2026" },
+      { "name": "First Home Down Payment", "target": 100000, "current_progress": 50, "on_track": false, "timeline": "2028" },
+      { "name": "Pay Off Student Loans", "target": 0, "current_progress": 60, "on_track": true, "timeline": "2029" },
+      { "name": "Retirement at 65", "target": 2500000, "current_progress": 3, "on_track": true, "timeline": "2057" }
+    ],
+    "risk_profile": "moderate",
+    "personal": {
+      "family": ["Wife: Lisa (age 28, teacher)", "No children yet, planning in 2-3 years", "Parents: Maria & Carlos, own small restaurant in Queens"],
+      "interests": ["Coaching youth soccer", "Home cooking — wants to open food blog", "Saving for first home in NJ suburbs"],
+      "career": "Michael is an accountant at mid-size firm (3 years). Lisa is a 4th grade teacher. Combined income ~$155K.",
+      "life_events": ["Getting married June 2024 (complete)", "Student loan refinancing in progress", "Looking at homes in northern NJ for 2028", "Lisa's school may offer better retirement plan next year"]
+    },
+    "past_conversations": [
+      {
+        "date": "2025-10-05",
+        "summary": "Discussed home savings strategy and whether to keep saving in CashPlus or invest more aggressively. Michael wants to maximize Roth IRA contributions. Lisa asked about teacher pension integration with their Morgan Stanley accounts. Reviewed student loan payoff timeline.",
+        "action_items": ["Model aggressive vs conservative home savings scenarios in GPS", "Send Roth IRA contribution guide for both", "Research NJ teacher pension integration", "Review student loan refinancing impact on cash flow"]
+      }
+    ],
+    "compliance_notes": "Form CRS delivered 2024-05. New client — building relationship. Standard suitability assessment completed.",
+    "next_review_due": "2026-05-15"
+  }
+]

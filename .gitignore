@@ -1,0 +1,16 @@
+.env
+.env.local
+.env.*.local
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+.DS_Store
+.playwright-mcp/
+*.png
+wingman-codebase.html
+DEMO_GUIDE.md
+DEMO_SCRIPT.md
+DEEP_DIVE_*.md
+understanding.md

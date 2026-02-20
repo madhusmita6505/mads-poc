@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wingman - FA Real-Time Assistant</title>
+    <link rel="stylesheet" href="/static/styles.css?v=13" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ───────────── Header ───────────── -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="logo">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <rect width="28" height="28" rx="6" fill="rgba(255,255,255,0.15)" />
+            <path d="M7 14l4 4 10-10" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+          <h1>Wingman</h1>
+        </div>
+        <span class="header-subtitle">FA Real-Time Assistant</span>
+      </div>
+      <div class="header-right">
+        <a href="/prep" class="prep-link" id="prep-link">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+          </svg>
+          Pre-Call Prep
+        </a>
+        <span class="client-context-badge hidden" id="client-context-badge"></span>
+        <div class="meeting-timer hidden" id="meeting-timer">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          </svg>
+          <span id="timer-display">00:00</span>
+        </div>
+        <div class="source-indicators">
+          <span class="source-indicator inactive" id="mic-indicator">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+            </svg>
+            Mic
+          </span>
+          <span class="source-indicator inactive" id="speaker-indicator">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+            Speaker
+          </span>
+        </div>
+        <div class="status-badge">
+          <span class="status-dot idle" id="status-dot"></span>
+          <span class="status-text" id="status-text">Ready</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ───────────── Main Content ───────────── -->
+    <main class="app-main">
+      <!-- Left Column: Transcript (top) + Word Cloud (bottom) -->
+      <div class="left-column">
+        <!-- Transcript Panel -->
+        <section class="panel transcript-panel">
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg>
+              Live Transcript
+            </h2>
+            <span class="panel-badge live-badge">LIVE</span>
+          </div>
+          <div class="panel-body" id="transcript-content">
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.2">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                <line x1="12" y1="19" x2="12" y2="23" />
+                <line x1="8" y1="23" x2="16" y2="23" />
+              </svg>
+              <p>Start listening to see the transcript</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Word Cloud Panel (bottom-left, real-time client focus visualization) -->
+        <section class="panel wordcloud-panel" id="wordcloud-panel">
+          <div class="wordcloud-header">
+            <div class="wordcloud-title-row">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <circle cx="12" cy="12" r="6"/>
+                <circle cx="12" cy="12" r="2"/>
+              </svg>
+              <h3>Client Focus</h3>
+            </div>
+            <span class="profile-badge" id="sentiment-badge">--</span>
+          </div>
+          <div class="wordcloud-body" id="wordcloud-content">
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.2">
+                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/>
+              </svg>
+              <p>Client focus topics will appear as the conversation progresses</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Right Column: AI Suggestions (top) + Discussion Tracker (bottom) -->
+      <div class="right-column">
+        <section class="panel suggestions-panel">
+          <!-- Intelligence Bar: Hidden until first data arrives -->
+          <div class="intelligence-bar hidden" id="intelligence-bar">
+            <div class="intel-widget risk-widget">
+              <span class="intel-label">Risk Profile</span>
+              <div class="risk-gauge">
+                <div class="risk-gauge-track">
+                  <div class="risk-gauge-fill" id="risk-gauge-fill"></div>
+                </div>
+                <span class="risk-gauge-label" id="risk-gauge-label">--</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Suggestions -->
+          <div class="panel-header">
+            <h2>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+              AI Suggestions
+            </h2>
+            <span class="panel-badge ai-badge">AI</span>
+          </div>
+          <div class="panel-body" id="suggestions-content">
+            <div class="empty-state">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.2">
+                <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+              </svg>
+              <p>Suggestions will appear during the conversation</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Discussion Tracker Panel (always present) -->
+        <section class="panel todo-panel" id="tracker-panel">
+          <div class="panel-header todo-header" id="bottom-panel-header">
+            <h2 id="bottom-panel-title">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+              </svg>
+              Discussion Tracker
+            </h2>
+            <span class="panel-badge todo-badge" id="tracker-count">0</span>
+          </div>
+          <div class="panel-body todo-body" id="tracker-content">
+            <!-- Mode selector: shown when no discussion points are loaded -->
+            <div class="tracker-mode-selector" id="tracker-mode-selector">
+              <p class="tracker-mode-desc">How would you like to set up discussion points?</p>
+              <button class="btn tracker-mode-btn" id="tracker-mode-manual">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Enter My Own Topics
+              </button>
+              <button class="btn tracker-mode-btn" id="tracker-mode-auto">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                </svg>
+                Auto-Suggest Topics
+              </button>
+            </div>
+            <!-- Manual entry form (hidden by default) -->
+            <div class="tracker-manual-entry hidden" id="tracker-manual-entry">
+              <div class="tracker-input-row"><span class="point-num">1</span><input type="text" class="tracker-input" placeholder="e.g., Review portfolio allocation" /></div>
+              <div class="tracker-input-row"><span class="point-num">2</span><input type="text" class="tracker-input" placeholder="e.g., Discuss retirement timeline" /></div>
+              <div class="tracker-input-row"><span class="point-num">3</span><input type="text" class="tracker-input" placeholder="e.g., Tax loss harvesting options" /></div>
+              <div class="tracker-input-row"><span class="point-num">4</span><input type="text" class="tracker-input" placeholder="(optional)" /></div>
+              <div class="tracker-input-row"><span class="point-num">5</span><input type="text" class="tracker-input" placeholder="(optional)" /></div>
+              <button class="btn tracker-confirm-btn" id="tracker-confirm-manual">Set Discussion Points</button>
+            </div>
+            <!-- Auto-suggest loading state (hidden by default) -->
+            <div class="tracker-auto-waiting hidden" id="tracker-auto-waiting">
+              <div class="tracker-auto-spinner"></div>
+              <p class="tracker-auto-text" id="tracker-auto-text">Generating discussion point suggestions...</p>
+            </div>
+            <!-- Tracker items rendered here dynamically -->
+            <div class="tracker-items hidden" id="tracker-items"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <!-- ───────────── Compliance Toast Container ───────────── -->
+    <div class="compliance-toasts" id="compliance-toasts"></div>
+
+    <!-- ───────────── Controls Bar ───────────── -->
+    <footer class="controls-bar">
+      <div class="controls-left">
+        <label class="mode-toggle" title="Simulation mode: play a recorded conversation through your speakers.">
+          <input type="checkbox" id="simulation-mode" />
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Simulation</span>
+        </label>
+        <div class="control-group" id="mic-group">
+          <label for="audio-device">Mic:</label>
+          <select id="audio-device"></select>
+        </div>
+        <label class="checkbox-label" id="system-audio-label" title="Capture the client's voice from system speakers.">
+          <input type="checkbox" id="capture-system-audio" checked />
+          <span class="checkbox-custom"></span>
+          Client audio
+        </label>
+      </div>
+
+      <div class="controls-center">
+        <button class="btn btn-start" id="start-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+          </svg>
+          Start Listening
+        </button>
+        <button class="btn btn-stop hidden" id="stop-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="6" y="6" width="12" height="12" rx="2" />
+          </svg>
+          Stop
+        </button>
+        <button class="btn btn-clear" id="clear-btn">Clear</button>
+      </div>
+
+      <div class="controls-right">
+        <label class="coaching-toggle" title="Coaching mode: adds explanations to suggestions">
+          <input type="checkbox" id="coaching-mode-toggle" />
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">Coaching</span>
+        </label>
+      </div>
+    </footer>
+
+    <!-- ───────────── Post-Call Summary Modal ───────────── -->
+    <div class="modal-overlay hidden" id="post-call-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Post-Call Intelligence Report</h2>
+          <button class="modal-close" id="modal-close-btn">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+          <div class="modal-loading">
+            <div class="modal-spinner"></div>
+            <p>Generating post-call summary...</p>
+          </div>
+        </div>
+        <div class="modal-footer hidden" id="modal-footer">
+          <button class="btn btn-modal-close" id="modal-done-btn">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/static/app.js?v=13"></script>
+  </body>
+</html>
