@@ -13,12 +13,18 @@ Backend server that:
 
 import asyncio
 import base64
+import io
 import json
 import logging
+import math
 import os
+import struct
 import time
+import uuid
+import wave
 from pathlib import Path
 
+import httpx
 import websockets
 from websockets.protocol import State as WsState
 from dotenv import load_dotenv
@@ -70,6 +76,16 @@ SPEAKER_LABELS = {
     SOURCE_MIC: "Advisor",
     SOURCE_SPEAKER: "Client",
 }
+
+# Transcription mode: "websocket" uses OpenAI Realtime WS, "rest" uses REST API
+TRANSCRIPTION_MODE = os.getenv("TRANSCRIPTION_MODE", "websocket")  # "websocket" or "rest"
+
+# REST Transcription (Morgan Stanley AI Gateway)
+MS_TRANSCRIPTION_URL = os.getenv(
+    "MS_TRANSCRIPTION_URL",
+    "https://aigateway-webfarm-dev.ms.com/openai/v1/audio/transcriptions",
+)
+MS_ASSERT_USERNAME = os.getenv("MS_ASSERT_USERNAME", "")
 
 # ---------------------------------------------------------------------------
 # Morgan Stanley Knowledge Base (injected into all AI engine prompts)
@@ -1152,6 +1168,275 @@ class OpenAITranscriptionConnection:
 
 
 # ---------------------------------------------------------------------------
+# REST-based Transcription connection (Morgan Stanley AI Gateway)
+# ---------------------------------------------------------------------------
+
+class RESTTranscriptionConnection:
+    """
+    Manages transcription via a REST API endpoint (e.g. Morgan Stanley AI Gateway).
+    Drop-in replacement for OpenAITranscriptionConnection.
+
+    Protocol:
+      1. Buffer incoming PCM16 audio frames
+      2. Use energy-based silence detection to identify speech segment boundaries
+      3. On segment end, convert PCM buffer to WAV and POST to REST endpoint
+      4. Parse SSE response (stream=true) for transcript deltas and completed events
+    """
+
+    SAMPLE_RATE = 16000
+    SAMPLE_WIDTH = 2
+    BYTES_PER_SECOND = SAMPLE_RATE * SAMPLE_WIDTH
+    FRAME_DURATION_MS = 30
+    FRAME_BYTES = SAMPLE_RATE * SAMPLE_WIDTH * FRAME_DURATION_MS // 1000  # 960
+
+    MIN_CHUNK_SECONDS = 0.5
+    MAX_CHUNK_SECONDS = 5.0
+
+    def __init__(
+        self,
+        speaker_label: str,
+        on_transcript_delta,
+        on_transcript_done,
+        on_error=None,
+        silence_duration_ms: int = 500,
+        vad_threshold: float = 0.3,
+        prefix_padding_ms: int = 200,
+    ):
+        self.speaker_label = speaker_label
+        self._on_transcript_delta = on_transcript_delta
+        self._on_transcript_done = on_transcript_done
+        self._on_error = on_error
+        self._silence_duration_ms = silence_duration_ms
+        self._prefix_padding_ms = prefix_padding_ms
+
+        # Map the OpenAI-style VAD threshold (0.0-1.0) to an RMS energy
+        # threshold (0-32768).  Empirically: 0.2 → ~320, 0.3 → ~480.
+        self._energy_threshold = max(200, int(vad_threshold * 1600))
+
+        self._audio_buffer = bytearray()
+        self._staging = bytearray()
+        self._has_speech = False
+        self._silence_bytes = 0
+        self._current_text: str = ""
+
+        self._client: httpx.AsyncClient | None = None
+        self._chunk_queue: asyncio.Queue | None = None
+        self._worker_task: asyncio.Task | None = None
+        self._closed = False
+
+    # -- lifecycle -----------------------------------------------------------
+
+    async def connect(self):
+        self._client = httpx.AsyncClient(
+            timeout=httpx.Timeout(30.0, connect=10.0),
+        )
+        self._chunk_queue = asyncio.Queue()
+        self._worker_task = asyncio.create_task(self._transcription_worker())
+        logger.info(
+            f"REST Transcription ready for [{self.speaker_label}] "
+            f"→ {MS_TRANSCRIPTION_URL}"
+        )
+
+    async def close(self):
+        self._closed = True
+        if self._has_speech and len(self._audio_buffer) > 0:
+            chunk = bytes(self._audio_buffer)
+            self._audio_buffer.clear()
+            await self._chunk_queue.put(chunk)
+        if self._chunk_queue:
+            await self._chunk_queue.put(None)
+        if self._worker_task:
+            try:
+                await asyncio.wait_for(self._worker_task, timeout=10.0)
+            except (asyncio.TimeoutError, asyncio.CancelledError):
+                self._worker_task.cancel()
+        if self._client:
+            await self._client.aclose()
+
+    # -- audio ingestion & silence detection ---------------------------------
+
+    async def send_audio(self, pcm_bytes: bytes):
+        if self._closed:
+            return
+
+        self._audio_buffer.extend(pcm_bytes)
+        self._staging.extend(pcm_bytes)
+
+        while len(self._staging) >= self.FRAME_BYTES:
+            frame = bytes(self._staging[: self.FRAME_BYTES])
+            del self._staging[: self.FRAME_BYTES]
+
+            rms = self._compute_rms(frame)
+            if rms > self._energy_threshold:
+                self._has_speech = True
+                self._silence_bytes = 0
+            else:
+                self._silence_bytes += self.FRAME_BYTES
+
+        buffer_seconds = len(self._audio_buffer) / self.BYTES_PER_SECOND
+        silence_seconds = self._silence_bytes / self.BYTES_PER_SECOND
+
+        should_flush = False
+        if buffer_seconds >= self.MAX_CHUNK_SECONDS:
+            should_flush = True
+        elif (
+            self._has_speech
+            and buffer_seconds >= self.MIN_CHUNK_SECONDS
+            and silence_seconds >= self._silence_duration_ms / 1000.0
+        ):
+            should_flush = True
+
+        if should_flush and len(self._audio_buffer) > 0:
+            chunk = bytes(self._audio_buffer)
+            self._audio_buffer.clear()
+            self._has_speech = False
+            self._silence_bytes = 0
+            await self._chunk_queue.put(chunk)
+
+    # -- background worker ---------------------------------------------------
+
+    async def _transcription_worker(self):
+        """Process audio chunks sequentially to preserve ordering."""
+        try:
+            while True:
+                chunk = await self._chunk_queue.get()
+                if chunk is None:
+                    break
+                try:
+                    await self._transcribe_chunk(chunk)
+                except Exception as e:
+                    logger.error(
+                        f"REST transcription error [{self.speaker_label}]: {e}",
+                        exc_info=True,
+                    )
+                    if self._on_error:
+                        await self._on_error(
+                            f"Transcription [{self.speaker_label}]: {e}"
+                        )
+                self._chunk_queue.task_done()
+        except asyncio.CancelledError:
+            pass
+
+    # -- REST API call -------------------------------------------------------
+
+    async def _transcribe_chunk(self, pcm_bytes: bytes):
+        wav_bytes = self._pcm_to_wav(pcm_bytes)
+        chunk_duration = len(pcm_bytes) / self.BYTES_PER_SECOND
+
+        headers = {
+            "Unique-Id": str(uuid.uuid4()),
+        }
+        if MS_ASSERT_USERNAME:
+            headers["X-MS-ASSERT-USERNAME"] = MS_ASSERT_USERNAME
+        if MS_TRANSCRIPTION_URL.startswith("https://api.openai.com"):
+            headers["Authorization"] = f"Bearer {OPENAI_API_KEY}"
+
+        form_data = {
+            "model": TRANSCRIPTION_MODEL,
+            "stream": "true",
+            "language": "en",
+            "chunking_strategy": "auto",
+            "temperature": "0",
+        }
+        files = {"file": ("audio.wav", wav_bytes, "audio/wav")}
+
+        t0 = time.time()
+        self._current_text = ""
+
+        try:
+            async with self._client.stream(
+                "POST",
+                MS_TRANSCRIPTION_URL,
+                headers=headers,
+                data=form_data,
+                files=files,
+            ) as response:
+                if response.status_code != 200:
+                    body = await response.aread()
+                    logger.error(
+                        f"REST transcription HTTP {response.status_code} "
+                        f"[{self.speaker_label}]: {body.decode(errors='replace')}"
+                    )
+                    if self._on_error:
+                        await self._on_error(
+                            f"Transcription HTTP {response.status_code} "
+                            f"for {self.speaker_label}"
+                        )
+                    return
+
+                t_first_delta = None
+                async for line in response.aiter_lines():
+                    line = line.strip()
+                    if not line or not line.startswith("data:"):
+                        continue
+                    payload = line[len("data:"):].strip()
+                    if payload == "[DONE]":
+                        break
+
+                    try:
+                        data = json.loads(payload)
+                    except json.JSONDecodeError:
+                        continue
+
+                    event_type = data.get("type", "")
+
+                    if event_type == "transcript.text.delta":
+                        if t_first_delta is None:
+                            t_first_delta = time.time()
+                            logger.info(
+                                f"REST first delta [{self.speaker_label}]: "
+                                f"{(t_first_delta - t0)*1000:.0f}ms "
+                                f"(chunk {chunk_duration:.1f}s)"
+                            )
+                        delta = data.get("delta", "")
+                        if delta:
+                            self._current_text += delta
+                            await self._on_transcript_delta(
+                                self._current_text, self.speaker_label
+                            )
+
+                    elif event_type == "transcript.text.done":
+                        transcript = data.get("transcript", "").strip()
+                        self._current_text = ""
+                        if transcript:
+                            await self._on_transcript_done(
+                                transcript, self.speaker_label
+                            )
+                        t_done = time.time()
+                        logger.info(
+                            f"REST transcript done [{self.speaker_label}]: "
+                            f"{(t_done - t0)*1000:.0f}ms total"
+                        )
+
+        except httpx.TimeoutException:
+            logger.error(f"REST transcription timeout [{self.speaker_label}]")
+            if self._on_error:
+                await self._on_error(
+                    f"Transcription timeout for {self.speaker_label}"
+                )
+
+    # -- helpers -------------------------------------------------------------
+
+    @staticmethod
+    def _pcm_to_wav(pcm_bytes: bytes) -> bytes:
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as wf:
+            wf.setnchannels(1)
+            wf.setsampwidth(2)
+            wf.setframerate(16000)
+            wf.writeframes(pcm_bytes)
+        return buf.getvalue()
+
+    @staticmethod
+    def _compute_rms(pcm_frame: bytes) -> float:
+        n = len(pcm_frame) // 2
+        if n == 0:
+            return 0.0
+        samples = struct.unpack(f"<{n}h", pcm_frame)
+        return math.sqrt(sum(s * s for s in samples) / n)
+
+
+# ---------------------------------------------------------------------------
 # Session: manages one advisor's audio WebSocket session
 # ---------------------------------------------------------------------------
 
@@ -1218,7 +1503,7 @@ class AdvisorSession:
         self._client_context_prompt: str = ""
 
         # Transcription connections keyed by source byte
-        self.transcription_connections: dict[int, OpenAITranscriptionConnection] = {}
+        self.transcription_connections: dict[int, OpenAITranscriptionConnection | RESTTranscriptionConnection] = {}
 
         # Mode flags
         self.coaching_mode: bool = False
@@ -1365,7 +1650,7 @@ class AdvisorSession:
             vad_threshold = 0.3
             prefix_padding = 200
 
-        conn = OpenAITranscriptionConnection(
+        conn_kwargs = dict(
             speaker_label=label,
             on_transcript_delta=self._handle_transcript_delta,
             on_transcript_done=self._handle_transcript_done,
@@ -1374,11 +1659,19 @@ class AdvisorSession:
             vad_threshold=vad_threshold,
             prefix_padding_ms=prefix_padding,
         )
+
+        if TRANSCRIPTION_MODE == "rest":
+            conn = RESTTranscriptionConnection(**conn_kwargs)
+            mode_label = "REST"
+        else:
+            conn = OpenAITranscriptionConnection(**conn_kwargs)
+            mode_label = "WebSocket"
+
         await conn.connect()
         self.transcription_connections[source_id] = conn
         await self.send_to_browser({
             "type": "status",
-            "message": f"{label} transcription connected",
+            "message": f"{label} transcription connected ({mode_label})",
         })
 
     # -- Audio routing -----------------------------------------------------

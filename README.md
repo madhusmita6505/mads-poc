@@ -145,3 +145,9 @@ Key parameters in `server.py`:
 - **AI Suggestions**: OpenAI GPT-4o-mini (streaming, max 10 words)
 - **Frontend**: Vanilla HTML/CSS/JS, Web Audio API (AudioWorklet)
 - **Audio Capture**: Chrome `getUserMedia` (mic) + `getDisplayMedia` (system audio)
+
+---------------------
+
+TRANSCRIPTION_MODE=rest
+MS_TRANSCRIPTION_URL=https://aigateway-webfarm-dev.ms.com/openai/v1/audio/transcriptions
+MS_ASSERT_USERNAME=your_username_here
